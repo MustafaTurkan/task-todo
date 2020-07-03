@@ -1,0 +1,13 @@
+{
+  "title": "merhaba world App",
+  "@title": {
+    "description": "The uygulama title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hello": "merhaba",
+  "@hello": {
+    "type": "text",
+    "placeholders": {}
+  }
+}
