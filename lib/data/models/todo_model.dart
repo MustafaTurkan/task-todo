@@ -6,6 +6,7 @@ class TodoModel {
 
   TodoModel.fromMap(Map<String, dynamic> map)
       : id = map['id'],
+        userId = map['userId'],
         title = map['title'],
         text = map['text'],
         status = map['status'],
@@ -18,6 +19,7 @@ class TodoModel {
   final int period;
 
   String id;
+  String userId;
   int status;
   DateTime createdDate;
   DateTime finishedDate;
@@ -31,22 +33,23 @@ class TodoModel {
 
     var remainingHours = finishedDate.difference(now).inHours;
     if (remainingHours < 24) {
-      return RemainingTime(TimeType.hour, remainingHours+1);
+      return RemainingTime(TimeType.hour, remainingHours + 1);
     }
     var remainingDays = finishedDate.difference(now).inDays;
 
-    return RemainingTime(TimeType.day, remainingDays+1);
+    return RemainingTime(TimeType.day, remainingDays + 1);
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'userId': userId,
       'title': title,
       'text': text,
       'status': status,
       'period': period,
-      'finishedDate': Timestamp.fromDate(finishedDate),
-      'createdDate': Timestamp.fromDate(createdDate)
+      'finishedDate': finishedDate != null ? Timestamp.fromDate(finishedDate) : null,
+      'createdDate': createdDate != null ? Timestamp.fromDate(createdDate) : null,
     };
   }
 }

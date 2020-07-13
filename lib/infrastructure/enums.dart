@@ -1,8 +1,8 @@
 import 'package:todo/infrastructure/l10n/localizer.dart';
 
-enum TodoType { daily, weekly,monthly }
+enum TodoType { daily, weekly,monthly,other }
 enum TodoStatus { waiting, done,}
-enum TimeType { hour, day,}
+enum TimeType { hour, day,month,year}
 
 
 

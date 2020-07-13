@@ -8,12 +8,10 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Container(
-      child:  Scaffold(
-           appBar:WhiteThemeUtils.appBarWithLinearGradient(context, Localizer.instance.error,isShowLeading: false),
-            body: Center(
-          child: Text(errorText),
-        )),
-    );
+    return Scaffold(
+         appBar:WhiteThemeUtils.appBarWithLinearGradient(context, Localizer.instance.error,isShowLeading: false),
+          body: Center(
+        child: Text(errorText),
+      ));
   }
 }

@@ -1,17 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 import 'package:todo/ui/theme/app_theme.dart';
 
-class WaitingView extends StatefulWidget
-{
- 
-  WaitingView( {this.color, this.size=25, this.boxSize});
- final Color color; 
- final double size;
- final double boxSize;
+class WaitingView extends StatefulWidget {
+  WaitingView({this.color, this.size = 25, this.boxSize});
+  final Color color;
+  final double size;
+  final double boxSize;
 
   @override
   _WaitingViewState createState() => _WaitingViewState();
@@ -19,35 +16,30 @@ class WaitingView extends StatefulWidget
 
 class _WaitingViewState extends State<WaitingView> {
   Color _color;
-  AppTheme appTheme ;
- @override
+  AppTheme appTheme;
+  @override
   void didChangeDependencies() {
     final appTheme = Provider.of<AppTheme>(context, listen: false);
-     _color=appTheme.data.primaryColor;
+    _color = appTheme.data.primaryColor;
     super.didChangeDependencies();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    
     _color ??= appTheme.data.primaryColor;
     if (widget.boxSize != null) {
       return Scaffold(
-        
-        body: SizedBox(
+          body: SizedBox(
         height: widget.boxSize,
         width: widget.boxSize,
         child: ThreeDotWaitIndicator(color: _color, size: widget.size),
-      )
-      );
+      ));
     }
     return Scaffold(
-      body: ThreeDotWaitIndicator(color:_color, size: widget.size),
-    ); 
+      body: ThreeDotWaitIndicator(color: _color, size: widget.size),
+    );
   }
 }
-
 
 class ThreeDotWaitIndicator extends StatefulWidget {
   ThreeDotWaitIndicator({
@@ -69,8 +61,6 @@ class _ThreeDotWaitIndicatorState extends State<ThreeDotWaitIndicator> with Sing
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))..repeat();
   }
-
-
 
   @override
   void dispose() {

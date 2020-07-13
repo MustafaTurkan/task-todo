@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/data/models/todo_model.dart';
-import 'package:todo/domain/blocs/bloc/todo_bloc.dart';
+import 'package:todo/domain/blocs/todo_bloc/todo_bloc.dart';
 import 'package:todo/infrastructure/enums.dart';
 import 'package:todo/infrastructure/error/error_localizer.dart';
 import 'package:todo/infrastructure/l10n/localizer.dart';
@@ -14,6 +13,7 @@ import 'package:todo/ui/widgets/alert_dialog/add_alert_dialog.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_botttom_navigation_bar.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_navigation_bar_item.dart';
 import 'package:todo/ui/widgets/waiting_view.dart';
+import 'package:todo/ui/views/empty_view.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -22,11 +22,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  _HomeViewState()
-      : _navigator = locator.get<AppNavigator>();
-
+  _HomeViewState() : _navigator = locator.get<AppNavigator>();
+ 
   final AppNavigator _navigator;
-  
+
   List<TitledNavigationBarItem> items;
   Localizer _localizer;
   TodoType _type;
@@ -39,13 +38,14 @@ class _HomeViewState extends State<HomeView> {
       TitledNavigationBarItem(title: Text(_localizer.daily), icon: Icons.perm_contact_calendar),
       TitledNavigationBarItem(title: Text(_localizer.weekly), icon: Icons.perm_contact_calendar),
       TitledNavigationBarItem(title: Text(_localizer.monthly), icon: Icons.perm_contact_calendar),
+      TitledNavigationBarItem(title: Text(_localizer.other), icon: Icons.perm_contact_calendar),
     ];
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    var bloc = BlocProvider.of<TodoBloc>(context);
+    var bloc = context.bloc<TodoBloc>();
     initialLoadTodo(bloc);
     return BlocBuilder<TodoBloc, TodoState>(builder: (context, state) {
       if (state is TodoLoadSuccess) {
@@ -53,7 +53,7 @@ class _HomeViewState extends State<HomeView> {
           body: Container(child: todoListView(state.todoModel)),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton(
-            onPressed: () => onPressAdd(context,bloc),
+            onPressed: () => onPressAdd(context, bloc),
             child: Icon(Icons.add),
           ),
           bottomNavigationBar: TitledBottomNavigationBar(
@@ -72,37 +72,36 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
-  void onPressAdd(BuildContext context,TodoBloc bloc) {
-    _showAddDialog(context,bloc);
+  void onPressAdd(BuildContext context, TodoBloc bloc) {
+    _showAddDialog(context, bloc);
   }
 
-  Future<void> _showAddDialog(BuildContext context,TodoBloc bloc) async {
+  Future<void> _showAddDialog(BuildContext context, TodoBloc bloc) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AddAlertDialog(
-                onAdd: (todo) {
-                   bloc.add(OnAdd(todo:todo));
-                   _navigator.pop(context);
-                },
-                onCancel: () {_navigator.pop(context);},
-              );      
+          onAdd: (todo) {
+            bloc.add(OnAdd(todo: todo));
+            _navigator.pop(context);
+          },
+          onCancel: () {
+            _navigator.pop(context);
+          },
+        );
       },
     );
   }
 
   Widget todoListView(List<TodoModel> todos) {
-    if (todos==null) {
-      return Center(
-        child: Text(_localizer.emptyMessage),
-      );
+    if (todos == null) {
+      return EmptyView();
     }
-    var todosFromPeriod=todos.where((item) => item.period==_type.index).toList();
-      return TodoListView(
-         todoList: todosFromPeriod,  
-      );
+    var todosFromPeriod = todos.where((item) => item.period == _type.index).toList();
+    return TodoListView(
+      todoList: todosFromPeriod,
+    );
   }
-
 
   void setTodoType(int index) {
     setState(() {
@@ -110,8 +109,10 @@ class _HomeViewState extends State<HomeView> {
         _type = TodoType.daily;
       } else if (TodoType.weekly.index == index) {
         _type = TodoType.weekly;
-      } else {
+      } else if (TodoType.monthly.index == index) {
         _type = TodoType.monthly;
+      } else {
+        _type = TodoType.other;
       }
     });
   }

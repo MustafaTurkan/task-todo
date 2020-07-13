@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/data/models/todo_model.dart';
-import 'package:todo/domain/blocs/bloc/todo_bloc.dart';
+import 'package:todo/domain/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:todo/domain/blocs/todo_bloc/todo_bloc.dart';
 import 'package:todo/infrastructure/enums.dart';
 import 'package:todo/infrastructure/l10n/localizer.dart';
 import 'package:todo/infrastructure/locator.dart';
@@ -26,11 +28,13 @@ class _TodoListViewState extends State<TodoListView> {
   final AppNavigator _navigator;
   AppTheme _appTheme;
   Localizer _localizer;
+  TodoBloc bloc;
 
   @override
   void didChangeDependencies() {
     _appTheme = Provider.of<AppTheme>(context);
     _localizer = Localizer.of(context);
+    bloc = context.bloc<TodoBloc>();
     super.didChangeDependencies();
   }
 
@@ -50,6 +54,14 @@ class _TodoListViewState extends State<TodoListView> {
                 gradient: WhiteThemeUtils.linearGradient(),
               ),
             ),
+            actions: <Widget>[
+              IconButton(
+                onPressed: () {
+                  onSingOut(context);
+                },
+                icon: Icon(FontAwesomeIcons.signOutAlt, color: _appTheme.colors.fontLight),
+              )
+            ],
             bottom: TabBar(
               indicatorColor: _appTheme.colors.canvas,
               tabs: <Widget>[
@@ -77,7 +89,7 @@ class _TodoListViewState extends State<TodoListView> {
     var todoListFromStatus = widget.todoList.where((item) => item.status == status.index).toList();
     return RefreshIndicator(
       onRefresh: () async {
-        onLoad(context);
+        onLoad();
       },
       child: ListView.builder(
           itemCount: todoListFromStatus.length,
@@ -99,7 +111,7 @@ class _TodoListViewState extends State<TodoListView> {
                 ),
                 trailing: Icon(Icons.menu),
                 onLongPress: () async {
-                  await _buildDialog(status, context, todo);
+                  await _buildDialog(status, todo);
                 },
               ),
             );
@@ -153,87 +165,86 @@ class _TodoListViewState extends State<TodoListView> {
     return _localizer.hour;
   }
 
-  Future<void> _buildDialog(TodoStatus status, BuildContext context, TodoModel todo) async {
+  Future<void> _buildDialog(TodoStatus status, TodoModel todo) async {
     if (status == TodoStatus.done) {
-      await _showCompletedActionDialog(context, todo);
+      await _showCompletedActionDialog(todo);
     } else {
-      await _showWaitingActionDialog(context, todo);
+      await _showWaitingActionDialog(todo);
     }
   }
 
-  Future<void> _showCompletedActionDialog(BuildContext context, TodoModel todo) async {
+  Future<void> _showCompletedActionDialog(TodoModel todo) async {
     await showDialog(
         context: context,
         builder: (context) {
-          var bloc = BlocProvider.of<TodoBloc>(context);
           return CompletedActionAlertDialog(
             title: todo.title,
             onDelete: () {
-              onDelete(bloc, todo.id);
+              onDelete(todo.id);
             },
             onUpdate: () async {
-              await _showUpdateDialog(context, todo);
+              await _showUpdateDialog(todo);
               _navigator.pop(context);
             },
             onWait: () {
               todo.status = TodoStatus.waiting.index;
-              onChange(bloc, todo);
+              onChange(todo);
             },
           );
         });
   }
 
-  Future<void> _showWaitingActionDialog(BuildContext context, TodoModel todo) async {
+  Future<void> _showWaitingActionDialog(TodoModel todo) async {
     await showDialog(
         context: context,
         builder: (context) {
-          var bloc = BlocProvider.of<TodoBloc>(context);
           return WaitActionAlertDialog(
             title: todo.title,
             onDelete: () {
-              onDelete(bloc, todo.id);
+              onDelete(todo.id);
             },
             onUpdate: () async {
-              await _showUpdateDialog(context, todo);
+              await _showUpdateDialog(todo);
               _navigator.pop(context);
             },
             onDone: () {
               todo.status = TodoStatus.done.index;
-              onChange(bloc, todo);
+              onChange(todo);
             },
           );
         });
   }
 
-  Future<void> _showUpdateDialog(BuildContext context, TodoModel todo) async {
+  Future<void> _showUpdateDialog(TodoModel todo) async {
     await showDialog(
         context: context,
         builder: (context) {
-          var bloc = Provider.of<TodoBloc>(context);
           return UpdateAlertDialog(
-            todoModel: todo,
-            onCancel: () {
-              _navigator.pop(context);
-            },
-            onUpdate: (todo) {
-              onChange(bloc, todo);
-            },
-          );
+              todoModel: todo,
+              onCancel: () {
+                _navigator.pop(context);
+              },
+              onUpdate: onChange);
         });
   }
 
-  void onChange(TodoBloc bloc, TodoModel todo) {
+  void onChange(TodoModel todo) {
     bloc.add(OnUpdate(todo: todo));
     _navigator.pop(context);
   }
 
-  void onDelete(TodoBloc bloc, String id) {
+  void onDelete(String id) {
     bloc.add(OnDelete(id: id));
     _navigator.pop(context);
   }
 
-  void onLoad(BuildContext context) {
-    var bloc = BlocProvider.of<TodoBloc>(context);
+  void onLoad() {
     bloc.add(OnLoad());
+  }
+
+  void onSingOut(BuildContext context) {
+    context.bloc<AuthenticationBloc>().add(
+          AuthenticationLoggedOut(),
+        );
   }
 }

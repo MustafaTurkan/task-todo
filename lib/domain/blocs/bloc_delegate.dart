@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:bloc/bloc.dart';
 
-class AppBlocDelegate extends BlocDelegate {
+class AppBlocDelegate extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);

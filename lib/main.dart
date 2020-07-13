@@ -3,31 +3,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:todo/domain/blocs/bloc/todo_bloc.dart';
-import 'package:todo/domain/repositories/iapp_repository.dart';
+import 'package:todo/domain/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:todo/domain/repositories/i_user_repository.dart';
+import 'package:todo/infrastructure/app_context.dart';
 import 'package:todo/infrastructure/l10n/localizer.dart';
 import 'package:todo/infrastructure/locator.dart';
 import 'package:todo/infrastructure/logger/logger.dart';
 import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/theme/app_theme.dart';
 import 'package:todo/ui/theme/themes/white/white.dart';
-import 'package:todo/ui/views/home_view.dart';
-
+import 'package:todo/ui/views/landing_view.dart';
 import 'infrastructure/app_string.dart';
 
 void main() {
   setupLocator();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp()
-      :_logger = locator.get<Logger>(),
-      _repository=locator.get<IAppRepository>()
-      ;
-        
+      : _logger = locator.get<Logger>(),
+        _userRepository = locator.get<IUserRepository>(),
+        _context = locator.get<AppContext>();
+
   final Logger _logger;
-  final IAppRepository _repository;
+  final IUserRepository _userRepository;
+  final AppContext _context;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
           builder: _builder,
           navigatorKey: AppNavigator.key,
           navigatorObservers: [AppNavigator.routeObserver],
-          home:HomeView(),
+          home: LandingView(),
         ));
   }
 
@@ -49,14 +51,17 @@ class MyApp extends StatelessWidget {
     if (!theme.initialized) {
       theme.setTheme(buildWhiteTheme(context));
     }
-    return Theme(data: theme.data, child: child);
+    return MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true), child: Theme(data: theme.data, child: child));
   }
 
   List<SingleChildWidget> _providers() {
     Provider.debugCheckInvalidValueType = null;
     return [
       ChangeNotifierProvider<AppTheme>(create: (context) => AppTheme()),
-      BlocProvider<TodoBloc>(create: (context) =>TodoBloc(logger:_logger,repository:_repository) ,)
+      BlocProvider<AuthenticationBloc>(
+        create: (context) => AuthenticationBloc(logger: _logger, userRepository: _userRepository, context: _context)
+          ..add(AuthenticationStarted()),
+      ),
     ];
   }
 

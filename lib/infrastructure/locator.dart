@@ -2,10 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:todo/data/repositories/app_repository.dart';
+import 'package:todo/data/api_provider/authentication_api.dart';
+import 'package:todo/data/repositories/todo_repository.dart';
 import 'package:todo/data/api_provider/todo_firebase_api.dart';
+import 'package:todo/data/repositories/user_repository.dart';
 import 'package:todo/domain/blocs/bloc_delegate.dart';
-import 'package:todo/domain/repositories/iapp_repository.dart';
+import 'package:todo/domain/repositories/i_todo_repository.dart';
+import 'package:todo/domain/repositories/i_user_repository.dart';
+import 'package:todo/infrastructure/app_context.dart';
 import 'package:todo/infrastructure/error/app_error_handler.dart';
 import 'package:todo/infrastructure/logger/log_debug_print.dart';
 import 'package:todo/infrastructure/logger/logger.dart';
@@ -13,15 +17,18 @@ import 'package:todo/ui/app_navigator.dart';
 
 GetIt locator = GetIt.instance;
 void setupLocator() {
+ locator.registerLazySingleton(() => AppContext());
  locator.registerLazySingleton(() => AppNavigator());
  locator.registerLazySingleton(() => Logger());
- locator.registerLazySingleton(() => TodoFirebaseApi(Logger()));
- locator.registerLazySingleton<IAppRepository>(() => AppRepository(api:locator.get<TodoFirebaseApi>()));
+ locator.registerLazySingleton(() => TodoFirebaseApi(Logger(),locator.get<AppContext>()));
+ locator.registerLazySingleton(() => AuthenticationApi(Logger()));
+ locator.registerLazySingleton<ITodoRepository>(() => TodoRepository(api:locator.get<TodoFirebaseApi>()));
+ locator.registerLazySingleton<IUserRepository>(() => UserRepository(api:locator.get<AuthenticationApi>()));
  run();
 }
 
 void run() {
-  BlocSupervisor.delegate = AppBlocDelegate();
+  Bloc.observer = AppBlocDelegate();
   AppErrorHandler.onReport = reportError;
   AppErrorHandler.onShow = showError;
   AppErrorHandler.track(() async {

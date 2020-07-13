@@ -1,9 +1,9 @@
 import 'package:todo/data/api_provider/todo_firebase_api.dart';
 import 'package:todo/data/models/todo_model.dart';
-import 'package:todo/domain/repositories/iapp_repository.dart';
+import 'package:todo/domain/repositories/i_todo_repository.dart';
 
-class AppRepository extends IAppRepository {
-  AppRepository({this.api});
+class TodoRepository extends ITodoRepository {
+  TodoRepository({this.api});
   final TodoFirebaseApi api;
 
   @override

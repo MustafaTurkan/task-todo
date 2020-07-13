@@ -141,7 +141,7 @@ AppThemeData buildWhiteTheme(BuildContext context) {
       color: appColors.canvasLight,
       elevation: 1,
     ),
-
+    
     buttonTheme: NButtonThemeData(
       highlightColor: Colors.white24,
       splashColor: Colors.white30,
@@ -157,10 +157,10 @@ AppThemeData buildWhiteTheme(BuildContext context) {
       shape: RoundedRectangleBorder(borderRadius: cardBorderRadius),
     ),
     snackBarTheme: SnackBarThemeData(
-        contentTextStyle: baseTheme.textTheme.bodyText2.copyWith(color: appColors.font),
-        backgroundColor: appColors.canvasLight,
+        contentTextStyle: baseTheme.textTheme.bodyText2.copyWith(color: appColors.fontLight),
+        backgroundColor: appColors.primary,
         elevation: 4,
-        actionTextColor: appColors.primary),
+        actionTextColor: appColors.fontLight),
 
     textTheme: ThemeUtils.textThemeCopyWith(baseTheme.textTheme, appColors.font, fontFamily),
     primaryTextTheme: ThemeUtils.textThemeCopyWith(baseTheme.primaryTextTheme, appColors.fontLight, fontFamily),

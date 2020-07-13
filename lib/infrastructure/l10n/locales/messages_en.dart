@@ -49,5 +49,21 @@ class MessageLookup extends MessageLookupByLibrary {
         AppString.day: MessageLookupByLibrary.simpleMessage('Day'),
         AppString.time: MessageLookupByLibrary.simpleMessage('Time'),
         AppString.up: MessageLookupByLibrary.simpleMessage('Up'),
+        AppString.failLogin: MessageLookupByLibrary.simpleMessage('Login Failure'),
+        AppString.loginTitle: MessageLookupByLibrary.simpleMessage('Login'),
+        AppString.loginSubTitle: MessageLookupByLibrary.simpleMessage('Welcome'),
+        AppString.loginIn: MessageLookupByLibrary.simpleMessage('Login In...'),
+       AppString.email: MessageLookupByLibrary.simpleMessage('Email'),
+ AppString.emailInvalid: MessageLookupByLibrary.simpleMessage('Invalid Email'),
+ AppString.password: MessageLookupByLibrary.simpleMessage('Password'),
+AppString.passwordInvalid: MessageLookupByLibrary.simpleMessage('Invalid Password'),
+  AppString.login: MessageLookupByLibrary.simpleMessage('Login'),
+AppString.loginWithGoogle: MessageLookupByLibrary.simpleMessage('Sign in with Google'),   
+AppString.createAccount: MessageLookupByLibrary.simpleMessage('Create an Account'),   
+        AppString.registering: MessageLookupByLibrary.simpleMessage('Registering...'), 
+               AppString.failRegister: MessageLookupByLibrary.simpleMessage('Registration Failure'),
+                  AppString.register: MessageLookupByLibrary.simpleMessage('Register'),
+                     AppString.other: MessageLookupByLibrary.simpleMessage('Other'),
+        
       };
 }

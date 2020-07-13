@@ -26,5 +26,19 @@ class AppString {
   static const String day='day';
   static const String time='time';
   static const String up='up';
-  
+  static const String failLogin='failLogin';
+  static const String loginTitle='loginTitle';
+  static const String loginSubTitle='loginSubTitle';
+  static const String loginIn='loginIn';
+  static const String email='Email';
+  static const String emailInvalid='emailInvalid';
+  static const String passwordInvalid='passwordInvalid';
+  static const String password='password';
+  static const String login='Login';
+  static const String loginWithGoogle='loginWithGoogle';
+  static const String createAccount='createAccount';
+  static const String registering='registering';
+  static const String failRegister='failRegister';
+  static const String register='register';
+    static const String other='other';
 }

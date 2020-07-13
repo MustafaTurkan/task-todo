@@ -1,18 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo/data/models/todo_model.dart';
+import 'package:todo/infrastructure/app_context.dart';
 import 'package:todo/infrastructure/logger/logger.dart';
 
 class TodoFirebaseApi {
-  TodoFirebaseApi(this.logger) : _firestore = Firestore.instance;
+  TodoFirebaseApi(this.logger, this.context) : _firestore = Firestore.instance;
 
   static const String collectionName = 'Todo';
   final Firestore _firestore;
   final Logger logger;
+  final AppContext context;
 
   Future<void> saveTodo(TodoModel todoModel) async {
     try {
       var id = _firestore.collection(collectionName).document().documentID;
       todoModel.id = id;
+      todoModel.userId = context.user.userId;
       var todoMap = todoModel.toMap();
       await _firestore.collection(collectionName).document(id).setData(todoMap);
     } catch (e) {
@@ -39,9 +42,10 @@ class TodoFirebaseApi {
       throw Exception(e);
     }
   }
-  
+
   Future<void> updateTodo(TodoModel todo) async {
     try {
+      todo.userId = context.user.userId;
       await _firestore.collection(collectionName).document(todo.id).updateData(todo.toMap());
     } catch (e) {
       logger.error(e.toString());
@@ -53,10 +57,11 @@ class TodoFirebaseApi {
     try {
       List<TodoModel> todoModels = [];
       QuerySnapshot querySnapshot;
-      querySnapshot = await _firestore.collection(collectionName).getDocuments();
-      if (querySnapshot.documents.isEmpty){
+      querySnapshot =
+          await _firestore.collection(collectionName).where('userId', isEqualTo: context.user.userId).getDocuments();
+      if (querySnapshot.documents.isEmpty) {
         return null;
-      }   
+      }
       for (DocumentSnapshot item in querySnapshot.documents) {
         TodoModel todoModel = TodoModel.fromMap(item.data);
         todoModels.add(todoModel);

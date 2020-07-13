@@ -3,12 +3,9 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_navigation_bar_item.dart';
 
-
-
-
 // ignore: must_be_immutable
 class TitledBottomNavigationBar extends StatefulWidget {
-   TitledBottomNavigationBar({
+  TitledBottomNavigationBar({
     Key key,
     this.reverse = false,
     this.curve = Curves.linear,
@@ -26,8 +23,7 @@ class TitledBottomNavigationBar extends StatefulWidget {
         assert(currentIndex != null),
         assert(enableShadow != null),
         super(key: key);
- 
- 
+
   final bool reverse;
   final Curve curve;
   final Color activeColor;
@@ -39,15 +35,13 @@ class TitledBottomNavigationBar extends StatefulWidget {
   final ValueChanged<int> onTap;
   final List<TitledNavigationBarItem> items;
 
-
-
   @override
   State createState() => _TitledBottomNavigationBarState();
 }
 
 class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
-  static const double  barHeight= 60;
-  static const double  indicatorHeight= 2;
+  static const double barHeight = 60;
+  static const double indicatorHeight = 2;
 
   bool get reverse => widget.reverse;
 
@@ -104,8 +98,7 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
             top: 0,
             width: width,
             child: AnimatedAlign(
-              alignment:
-                  Alignment(_getIndicatorPosition(widget.currentIndex), 0),
+              alignment: Alignment(_getIndicatorPosition(widget.currentIndex), 0),
               curve: curve,
               duration: duration,
               child: Container(
@@ -120,7 +113,7 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
     );
   }
 
- void _select(int index){
+  void _select(int index) {
     widget.currentIndex = index;
     widget.onTap(widget.currentIndex);
     setState(() {});
@@ -163,4 +156,4 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
       ),
     );
   }
-  }
+}

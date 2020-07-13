@@ -8,9 +8,8 @@ import 'package:todo/ui/theme/app_theme.dart';
 import 'package:todo/ui/widgets/drop_down_field.dart';
 import 'package:todo/ui/widgets/from_field_padding.dart';
 
-
 class UpdateAlertDialog extends StatefulWidget {
-  UpdateAlertDialog({Key key, this.onUpdate, this.onCancel,this.todoModel}) : super(key: key);
+  UpdateAlertDialog({Key key, this.onUpdate, this.onCancel, this.todoModel}) : super(key: key);
   final Function(TodoModel) onUpdate;
   final VoidCallback onCancel;
   final TodoModel todoModel;
@@ -34,9 +33,9 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
   void initState() {
     _contentController = TextEditingController();
     _titleController = TextEditingController();
-    _titleController.text=widget.todoModel.title;
-    _contentController.text=widget.todoModel.text;
-    _type= TodoType.values.firstWhere((e) => e.index==widget.todoModel.period) ;
+    _titleController.text = widget.todoModel.title;
+    _contentController.text = widget.todoModel.text;
+    _type = TodoType.values.firstWhere((e) => e.index == widget.todoModel.period);
     _type = TodoType.daily;
     super.initState();
   }
@@ -60,9 +59,9 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-          title: Text(_localizer.task),
-          content: Container(
-             height: 240,
+      title: Text(_localizer.task),
+      content: Container(
+        height: 240,
         child: Form(
           key: _formKey,
           child: Column(
@@ -114,7 +113,7 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
                       controller: _contentController,
                       textInputAction: TextInputAction.done,
                       inputFormatters: [
-                        LengthLimitingTextInputFormatter(50),
+                        LengthLimitingTextInputFormatter(150),
                       ],
                       validator: (value) {
                         if (value.isEmpty) {

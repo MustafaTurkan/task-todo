@@ -12,7 +12,7 @@ class AppError implements Error {
   String toString() {
     return message ?? 'AppError';
   }
-
   @override
   StackTrace get stackTrace => _stackTrace;
+  
 }
