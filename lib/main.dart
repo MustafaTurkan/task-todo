@@ -6,6 +6,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:todo/domain/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:todo/domain/repositories/i_user_repository.dart';
 import 'package:todo/infrastructure/app_context.dart';
+import 'package:todo/infrastructure/app_string.dart';
 import 'package:todo/infrastructure/l10n/localizer.dart';
 import 'package:todo/infrastructure/locator.dart';
 import 'package:todo/infrastructure/logger/logger.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [..._providers()],
         child: MaterialApp(
-          title: Localizer.of(context).appName,
+          title: AppString.appName,
           localizationsDelegates: _localizationsDelegates(),
           supportedLocales: _supportedLocales(),
           builder: _builder,
@@ -72,3 +73,4 @@ class MyApp extends StatelessWidget {
     return [const Locale('en'), const Locale('tr')];
   }
 }
+

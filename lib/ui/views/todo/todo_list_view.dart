@@ -177,13 +177,15 @@ class _TodoListViewState extends State<TodoListView> {
         context: context,
         builder: (context) {
           return CompletedActionAlertDialog(
-            title: todo.title,
+            todoModel: todo,
             onDelete: () {
               onDelete(todo.id);
             },
-            onUpdate: () async {
-               await onUpdate(todo);
-              _navigator.pop(context);
+            onUpdate: (data) {
+              if (data != todo) {
+                onUpdate(data);
+                _navigator.pop(context);
+              }
             },
             onWait: () {
               todo.status = TodoStatus.waiting.index;
@@ -198,13 +200,15 @@ class _TodoListViewState extends State<TodoListView> {
         context: context,
         builder: (context) {
           return WaitActionAlertDialog(
-            title: todo.title,
+            todoModel: todo,
             onDelete: () {
               onDelete(todo.id);
             },
-            onUpdate: () async {
-              await onUpdate(todo);
-              _navigator.pop(context);
+            onUpdate: (data) {
+              if (data != todo) {
+                onUpdate(data);
+                _navigator.pop(context);
+              }
             },
             onDone: () {
               todo.status = TodoStatus.done.index;
@@ -214,12 +218,9 @@ class _TodoListViewState extends State<TodoListView> {
         });
   }
 
-
-  Future<void> onUpdate(TodoModel todoModel)async
-  {
-    var result= await _navigator.pushUptadeTodo(context, todoModel);  
-    if (result!=null&&todoModel!=result) {
-       bloc.add(OnUpdate(todo: result));
+  Future<void> onUpdate(TodoModel todoModel) async {
+    if (todoModel != null) {
+      bloc.add(OnUpdate(todo: todoModel));
     }
   }
 

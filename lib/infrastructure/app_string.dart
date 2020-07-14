@@ -1,5 +1,5 @@
 class AppString {
-  static const String appName = 'appName';
+  static const String appName = 'task-todo';
   static const String unExpectedErrorOccurred = 'unExpectedErrorOccurred';
   static const String daily = 'daily';
   static const String weekly = 'weekly';

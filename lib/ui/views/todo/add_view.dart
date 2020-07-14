@@ -34,19 +34,21 @@ class _AddViewState extends State<AddView> {
   Localizer _localizer;
   TodoType _type;
 
+
   @override
   void initState() {
+      super.initState();
     _contentController = TextEditingController();
     _titleController = TextEditingController();
     _type = TodoType.daily;
-    super.initState();
+  
   }
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     _appTheme = Provider.of<AppTheme>(context);
     _localizer = Localizer.of(context);
-    super.didChangeDependencies();
   }
 
   @override
@@ -186,6 +188,6 @@ class _AddViewState extends State<AddView> {
         title: _titleController.text,
         text: _contentController.text,
         status: TodoStatus.waiting.index);
-    _navigator.pop(context, result: todo);
+    _navigator.pop(context,result:todo);
   }
 }

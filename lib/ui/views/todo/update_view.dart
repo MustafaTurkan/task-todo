@@ -94,6 +94,7 @@ class _UpdateViewState extends State<UpdateView> {
                 SizedBox(
                   height: 50,
                 ),
+              
                 FormFieldPadding(
                     child: DropDownField<String>(
                         hintText: _localizer.period,

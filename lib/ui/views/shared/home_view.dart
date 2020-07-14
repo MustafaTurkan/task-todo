@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/data/models/todo_model.dart';
@@ -8,7 +9,9 @@ import 'package:todo/infrastructure/l10n/localizer.dart';
 import 'package:todo/infrastructure/locator.dart';
 import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/views/shared/error_view.dart';
+import 'package:todo/ui/views/todo/add_view.dart';
 import 'package:todo/ui/views/todo/todo_list_view.dart';
+import 'package:todo/ui/widgets/animations/open_view_with_floatingaction_button.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_botttom_navigation_bar.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_navigation_bar_item.dart';
 import 'package:todo/ui/widgets/waiting_view.dart';
@@ -21,16 +24,16 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  _HomeViewState() : _navigator = locator.get<AppNavigator>();
- 
-  final AppNavigator _navigator;
 
   List<TitledNavigationBarItem> items;
   Localizer _localizer;
   TodoType _type;
+  TodoBloc bloc;
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+    bloc = context.bloc<TodoBloc>();
     _localizer = Localizer.of(context);
     _type = TodoType.daily;
     items = [
@@ -39,22 +42,21 @@ class _HomeViewState extends State<HomeView> {
       TitledNavigationBarItem(title: Text(_localizer.monthly), icon: Icons.perm_contact_calendar),
       TitledNavigationBarItem(title: Text(_localizer.other), icon: Icons.perm_contact_calendar),
     ];
-    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    var bloc = context.bloc<TodoBloc>();
     initialLoadTodo(bloc);
     return BlocBuilder<TodoBloc, TodoState>(builder: (context, state) {
       if (state is TodoLoadSuccess) {
         return Scaffold(
           body: Container(child: todoListView(state.todoModel)),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: OpenViewWithFloatingActionButton(view: AddView(), onClosed: onAddTodo),
+          /*FloatingActionButton(
             onPressed: () => onPressAdd(context, bloc),
             child: Icon(Icons.add),
-          ),
+          ),*/
           bottomNavigationBar: TitledBottomNavigationBar(
             currentIndex: _type.index,
             onTap: setTodoType,
@@ -71,13 +73,11 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
-  Future<void> onPressAdd(BuildContext context, TodoBloc bloc)async {
-    var result=await _navigator.pushAddTodo(context);
-    if (result!=null) {
-       context.bloc<TodoBloc>().add(OnAdd(todo:result));
+  void onAddTodo(TodoModel todoModel) {
+    if (todoModel != null) {
+      bloc.add(OnAdd(todo: todoModel));
     }
   }
-
 
   Widget todoListView(List<TodoModel> todos) {
     if (todos == null) {

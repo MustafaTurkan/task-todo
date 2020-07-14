@@ -66,7 +66,6 @@ class _LoginFormState extends State<_LoginForm> {
   @override
   void initState() {
     super.initState();
-
     _emailController.addListener(_onLoginEmailChanged);
     _passwordController.addListener(_onLoginPasswordChanged);
   }
