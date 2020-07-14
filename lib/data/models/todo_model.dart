@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:todo/infrastructure/enums.dart';
 
-class TodoModel {
+
+
+// ignore: must_be_immutable
+class TodoModel extends Equatable {
   TodoModel({this.id, this.title, this.text, this.status, this.period, this.createdDate, this.finishedDate});
 
   TodoModel.fromMap(Map<String, dynamic> map)
@@ -52,6 +56,13 @@ class TodoModel {
       'createdDate': createdDate != null ? Timestamp.fromDate(createdDate) : null,
     };
   }
+
+  @override
+  List<Object> get props => [id,title,text,status,period,finishedDate];
+  @override
+  bool get stringify => false;
+
+
 }
 
 class RemainingTime {

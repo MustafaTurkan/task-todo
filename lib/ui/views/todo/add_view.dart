@@ -4,27 +4,32 @@ import 'package:provider/provider.dart';
 import 'package:todo/data/models/todo_model.dart';
 import 'package:todo/infrastructure/enums.dart';
 import 'package:todo/infrastructure/l10n/localizer.dart';
+import 'package:todo/infrastructure/locator.dart';
+import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/theme/app_theme.dart';
+import 'package:todo/ui/views/shared/base_form_view.dart';
+import 'package:todo/ui/widgets/date_time_form_filed.dart';
 import 'package:todo/ui/widgets/drop_down_field.dart';
 import 'package:todo/ui/widgets/from_field_padding.dart';
 
-class UpdateAlertDialog extends StatefulWidget {
-  UpdateAlertDialog({Key key, this.onUpdate, this.onCancel, this.todoModel}) : super(key: key);
-  final Function(TodoModel) onUpdate;
-  final VoidCallback onCancel;
-  final TodoModel todoModel;
+class AddView extends StatefulWidget {
+  AddView({Key key}) : super(key: key);
 
   @override
-  _UpdateAlertDialogState createState() => _UpdateAlertDialogState();
+  _AddViewState createState() => _AddViewState();
 }
 
-class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
+class _AddViewState extends State<AddView> {
+  _AddViewState() : _navigator = locator.get<AppNavigator>();
+
+  final AppNavigator _navigator;
   final _formKey = GlobalKey<FormState>();
   final _fnTitle = FocusNode();
   final _fnContent = FocusNode();
 
   TextEditingController _contentController;
   TextEditingController _titleController;
+  DateTime _finishDateTime = DateTime.now();
   AppTheme _appTheme;
   Localizer _localizer;
   TodoType _type;
@@ -33,11 +38,15 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
   void initState() {
     _contentController = TextEditingController();
     _titleController = TextEditingController();
-    _titleController.text = widget.todoModel.title;
-    _contentController.text = widget.todoModel.text;
-    _type = TodoType.values.firstWhere((e) => e.index == widget.todoModel.period);
     _type = TodoType.daily;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _appTheme = Provider.of<AppTheme>(context);
+    _localizer = Localizer.of(context);
+    super.didChangeDependencies();
   }
 
   @override
@@ -50,24 +59,38 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
   }
 
   @override
-  void didChangeDependencies() {
-    _appTheme = Provider.of<AppTheme>(context);
-    _localizer = Localizer.of(context);
-    super.didChangeDependencies();
+  Widget build(BuildContext context) {
+    return BaseFormView(
+      haveAppBar: true,
+      title: Center(
+        child: Text(
+          _localizer.newTask,
+          style: _appTheme.data.textTheme.bodyText1.copyWith(color: _appTheme.colors.fontLight, fontSize: 30),
+        ),
+      ),
+      subTitle: Center(
+        child: Text(
+          _localizer.add,
+          style: _appTheme.data.textTheme.bodyText2.copyWith(color: _appTheme.colors.fontLight, fontSize: 18),
+        ),
+      ),
+      child: _buildAddForm(),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(_localizer.task),
-      content: Container(
-        height: 240,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: FormFieldPadding(
+  Widget _buildAddForm() {
+    return Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                SizedBox(
+                  height: 50,
+                ),
+                FormFieldPadding(
                     child: DropDownField<String>(
                         hintText: _localizer.period,
                         value: Enum.getLocalizationName(_type),
@@ -82,9 +105,15 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
                             _type = TodoType.values.firstWhere((e) => Enum.getLocalizationName(e) == val);
                           });
                         })),
-              ),
-              Expanded(
-                child: FormFieldPadding(
+                if (_type == TodoType.other)
+                  FormFieldPadding(
+                    child: DateTimeFormField(
+                      onChange: (date) {
+                        _finishDateTime = date;
+                      },
+                    ),
+                  ),
+                FormFieldPadding(
                   child: TextFormField(
                     focusNode: _fnTitle,
                     controller: _titleController,
@@ -105,9 +134,7 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
                     },
                   ),
                 ),
-              ),
-              Expanded(
-                child: FormFieldPadding(
+                FormFieldPadding(
                   child: TextFormField(
                       focusNode: _fnContent,
                       controller: _contentController,
@@ -129,42 +156,24 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
                         _onFormSubmit();
                       }),
                 ),
-              ),
-              Expanded(
-                child: FormFieldPadding(
+                FormFieldPadding(
                     child: Row(
                   children: <Widget>[
-                    Expanded(child: Builder(builder: (context) {
-                      return FlatButton(
-                        color: _appTheme.data.errorColor,
-                        onPressed: widget.onCancel,
-                        child: Text(
-                          _localizer.cancel,
-                          style: _appTheme.data.textTheme.subtitle1.copyWith(color: _appTheme.colors.fontLight),
-                        ),
-                      );
-                    })),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(child: Builder(builder: (context) {
-                      return FlatButton(
-                        color: _appTheme.data.primaryColor,
-                        onPressed: _onFormSubmit,
-                        child: Text(
-                          _localizer.update,
-                          style: _appTheme.data.textTheme.subtitle1.copyWith(color: _appTheme.colors.fontLight),
-                        ),
-                      );
-                    }))
+                    Expanded(
+                        child: FlatButton(
+                      color: _appTheme.data.primaryColor,
+                      onPressed: _onFormSubmit,
+                      child: Text(
+                        _localizer.add,
+                        style: _appTheme.data.textTheme.subtitle1.copyWith(color: _appTheme.colors.fontLight),
+                      ),
+                    ))
                   ],
-                )),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                ))
+              ],
+            ),
+          ],
+        ));
   }
 
   void _onFormSubmit() {
@@ -172,11 +181,11 @@ class _UpdateAlertDialogState extends State<UpdateAlertDialog> {
       return;
     }
     var todo = TodoModel(
-        id: widget.todoModel.id,
         period: _type.index,
+        finishedDate: _finishDateTime,
         title: _titleController.text,
         text: _contentController.text,
         status: TodoStatus.waiting.index);
-    widget.onUpdate(todo);
+    _navigator.pop(context, result: todo);
   }
 }

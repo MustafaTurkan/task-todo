@@ -6,9 +6,9 @@ import 'package:todo/domain/repositories/i_todo_repository.dart';
 import 'package:todo/infrastructure/error/error_localizer.dart';
 import 'package:todo/infrastructure/locator.dart';
 import 'package:todo/infrastructure/logger/logger.dart';
-import 'package:todo/ui/views/error_view.dart';
-import 'package:todo/ui/views/home_view.dart';
-import 'package:todo/ui/views/login_view.dart';
+import 'package:todo/ui/views/shared/error_view.dart';
+import 'package:todo/ui/views/shared/home_view.dart';
+import 'package:todo/ui/views/login/login_view.dart';
 import 'package:todo/ui/widgets/waiting_view.dart';
 
 class LandingView extends StatelessWidget {

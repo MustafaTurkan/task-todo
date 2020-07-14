@@ -12,7 +12,6 @@ import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/theme/app_theme.dart';
 import 'package:todo/ui/theme/theme.dart';
 import 'package:todo/ui/widgets/alert_dialog/completed_action_alert_dialog.dart';
-import 'package:todo/ui/widgets/alert_dialog/update_alert_dialog.dart';
 import 'package:todo/ui/widgets/alert_dialog/wait_action_alert_dialog.dart';
 
 class TodoListView extends StatefulWidget {
@@ -183,7 +182,7 @@ class _TodoListViewState extends State<TodoListView> {
               onDelete(todo.id);
             },
             onUpdate: () async {
-              await _showUpdateDialog(todo);
+               await onUpdate(todo);
               _navigator.pop(context);
             },
             onWait: () {
@@ -204,7 +203,7 @@ class _TodoListViewState extends State<TodoListView> {
               onDelete(todo.id);
             },
             onUpdate: () async {
-              await _showUpdateDialog(todo);
+              await onUpdate(todo);
               _navigator.pop(context);
             },
             onDone: () {
@@ -215,17 +214,13 @@ class _TodoListViewState extends State<TodoListView> {
         });
   }
 
-  Future<void> _showUpdateDialog(TodoModel todo) async {
-    await showDialog(
-        context: context,
-        builder: (context) {
-          return UpdateAlertDialog(
-              todoModel: todo,
-              onCancel: () {
-                _navigator.pop(context);
-              },
-              onUpdate: onChange);
-        });
+
+  Future<void> onUpdate(TodoModel todoModel)async
+  {
+    var result= await _navigator.pushUptadeTodo(context, todoModel);  
+    if (result!=null&&todoModel!=result) {
+       bloc.add(OnUpdate(todo: result));
+    }
   }
 
   void onChange(TodoModel todo) {

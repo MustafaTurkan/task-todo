@@ -43,8 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
         AppString.delete: MessageLookupByLibrary.simpleMessage('Sil'),
         AppString.detail: MessageLookupByLibrary.simpleMessage('Detay'),
         AppString.onWaiting: MessageLookupByLibrary.simpleMessage('Beklemeye Al'),
-        AppString.emptyMessage:
-            MessageLookupByLibrary.simpleMessage('Bir göreviniz bulunmuyor.Eklemek isteyebilirsiniz:)'),
+        AppString.emptyMessage:MessageLookupByLibrary.simpleMessage('Bir göreviniz bulunmuyor.Eklemek isteyebilirsiniz:)'),
         AppString.update: MessageLookupByLibrary.simpleMessage('Güncelle'),
         AppString.task: MessageLookupByLibrary.simpleMessage('Görev'),
         AppString.hour: MessageLookupByLibrary.simpleMessage('Saat'),
@@ -65,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         AppString.registering: MessageLookupByLibrary.simpleMessage('Hesap Oluşturuluyor...'),
         AppString.failRegister: MessageLookupByLibrary.simpleMessage('Hatalı Hesap Oluşturma'),
         AppString.register: MessageLookupByLibrary.simpleMessage('Oluştur'),
-            AppString.other: MessageLookupByLibrary.simpleMessage('Diğer'),
+        AppString.other: MessageLookupByLibrary.simpleMessage('Diğer'),
+        AppString.updateTask: MessageLookupByLibrary.simpleMessage('Görevi Güncelle'),
       };
 }

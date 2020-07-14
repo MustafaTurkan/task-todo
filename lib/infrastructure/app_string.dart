@@ -40,5 +40,6 @@ class AppString {
   static const String registering='registering';
   static const String failRegister='failRegister';
   static const String register='register';
-    static const String other='other';
+  static const String other='other';
+  static const String updateTask='updateTask';
 }

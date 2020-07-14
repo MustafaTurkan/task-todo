@@ -12,7 +12,7 @@ import 'package:todo/infrastructure/locator.dart';
 import 'package:todo/infrastructure/logger/logger.dart';
 import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/theme/app_theme.dart';
-import 'package:todo/ui/views/base_form_view.dart';
+import 'package:todo/ui/views/shared/base_form_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView()

@@ -7,13 +7,12 @@ import 'package:todo/infrastructure/error/error_localizer.dart';
 import 'package:todo/infrastructure/l10n/localizer.dart';
 import 'package:todo/infrastructure/locator.dart';
 import 'package:todo/ui/app_navigator.dart';
-import 'package:todo/ui/views/error_view.dart';
-import 'package:todo/ui/views/todo_list_view.dart';
-import 'package:todo/ui/widgets/alert_dialog/add_alert_dialog.dart';
+import 'package:todo/ui/views/shared/error_view.dart';
+import 'package:todo/ui/views/todo/todo_list_view.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_botttom_navigation_bar.dart';
 import 'package:todo/ui/widgets/navigation_bar/titled_navigation_bar_item.dart';
 import 'package:todo/ui/widgets/waiting_view.dart';
-import 'package:todo/ui/views/empty_view.dart';
+import 'package:todo/ui/views/shared/empty_view.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({Key key}) : super(key: key);
@@ -72,26 +71,13 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
-  void onPressAdd(BuildContext context, TodoBloc bloc) {
-    _showAddDialog(context, bloc);
+  Future<void> onPressAdd(BuildContext context, TodoBloc bloc)async {
+    var result=await _navigator.pushAddTodo(context);
+    if (result!=null) {
+       context.bloc<TodoBloc>().add(OnAdd(todo:result));
+    }
   }
 
-  Future<void> _showAddDialog(BuildContext context, TodoBloc bloc) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AddAlertDialog(
-          onAdd: (todo) {
-            bloc.add(OnAdd(todo: todo));
-            _navigator.pop(context);
-          },
-          onCancel: () {
-            _navigator.pop(context);
-          },
-        );
-      },
-    );
-  }
 
   Widget todoListView(List<TodoModel> todos) {
     if (todos == null) {

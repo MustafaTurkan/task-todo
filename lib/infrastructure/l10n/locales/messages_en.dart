@@ -16,7 +16,8 @@ final messages = new MessageLookup();
 final _keepAnalysisHappy = Intl.defaultLocale;
 
 // ignore: non_constant_identifier_names
-typedef MessageIfAbsent(String message_str, List args); 
+typedef MessageIfAbsent(String message_str, List args);
+
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'en';
 
@@ -53,17 +54,17 @@ class MessageLookup extends MessageLookupByLibrary {
         AppString.loginTitle: MessageLookupByLibrary.simpleMessage('Login'),
         AppString.loginSubTitle: MessageLookupByLibrary.simpleMessage('Welcome'),
         AppString.loginIn: MessageLookupByLibrary.simpleMessage('Login In...'),
-       AppString.email: MessageLookupByLibrary.simpleMessage('Email'),
- AppString.emailInvalid: MessageLookupByLibrary.simpleMessage('Invalid Email'),
- AppString.password: MessageLookupByLibrary.simpleMessage('Password'),
-AppString.passwordInvalid: MessageLookupByLibrary.simpleMessage('Invalid Password'),
-  AppString.login: MessageLookupByLibrary.simpleMessage('Login'),
-AppString.loginWithGoogle: MessageLookupByLibrary.simpleMessage('Sign in with Google'),   
-AppString.createAccount: MessageLookupByLibrary.simpleMessage('Create an Account'),   
-        AppString.registering: MessageLookupByLibrary.simpleMessage('Registering...'), 
-               AppString.failRegister: MessageLookupByLibrary.simpleMessage('Registration Failure'),
-                  AppString.register: MessageLookupByLibrary.simpleMessage('Register'),
-                     AppString.other: MessageLookupByLibrary.simpleMessage('Other'),
-        
+        AppString.email: MessageLookupByLibrary.simpleMessage('Email'),
+        AppString.emailInvalid: MessageLookupByLibrary.simpleMessage('Invalid Email'),
+        AppString.password: MessageLookupByLibrary.simpleMessage('Password'),
+        AppString.passwordInvalid: MessageLookupByLibrary.simpleMessage('Invalid Password'),
+        AppString.login: MessageLookupByLibrary.simpleMessage('Login'),
+        AppString.loginWithGoogle: MessageLookupByLibrary.simpleMessage('Sign in with Google'),
+        AppString.createAccount: MessageLookupByLibrary.simpleMessage('Create an Account'),
+        AppString.registering: MessageLookupByLibrary.simpleMessage('Registering...'),
+        AppString.failRegister: MessageLookupByLibrary.simpleMessage('Registration Failure'),
+        AppString.register: MessageLookupByLibrary.simpleMessage('Register'),
+        AppString.other: MessageLookupByLibrary.simpleMessage('Other'),
+        AppString.updateTask: MessageLookupByLibrary.simpleMessage('Update Task'),
       };
 }

@@ -8,8 +8,8 @@ class FormFieldPadding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(
-          right: 2,
-          left: 2,
+          right: 10,
+          left: 10,
           top: 5,
           bottom: 5,
         ),

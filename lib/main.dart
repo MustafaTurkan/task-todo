@@ -12,7 +12,7 @@ import 'package:todo/infrastructure/logger/logger.dart';
 import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/theme/app_theme.dart';
 import 'package:todo/ui/theme/themes/white/white.dart';
-import 'package:todo/ui/views/landing_view.dart';
+import 'package:todo/ui/views/shared/landing_view.dart';
 import 'infrastructure/app_string.dart';
 
 void main() {

@@ -13,6 +13,7 @@ class BaseFormView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,   
         appBar:haveAppBar?AppBar(
           elevation:0,
           backgroundColor:Color(0xff1a73e9),
@@ -41,8 +42,8 @@ class BaseFormView extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(60),
-                                topRight: Radius.circular(60),
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
                               ),
                             ),
                             child: child)))

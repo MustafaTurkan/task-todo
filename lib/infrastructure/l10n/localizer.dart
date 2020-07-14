@@ -66,7 +66,7 @@ class Localizer {
   String get failRegister =>Intl.message(AppString.failRegister);
   String get register =>Intl.message(AppString.register);
   String get other =>Intl.message(AppString.other);
-  
+  String get updateTask =>Intl.message(AppString.updateTask);
   
   
   //dynamic text translate
