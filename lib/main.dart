@@ -13,7 +13,6 @@ import 'package:todo/ui/app_navigator.dart';
 import 'package:todo/ui/theme/app_theme.dart';
 import 'package:todo/ui/theme/themes/white/white.dart';
 import 'package:todo/ui/views/shared/landing_view.dart';
-import 'infrastructure/app_string.dart';
 
 void main() {
   setupLocator();
@@ -36,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [..._providers()],
         child: MaterialApp(
-          title: AppString.appName,
+          title: Localizer.of(context).appName,
           localizationsDelegates: _localizationsDelegates(),
           supportedLocales: _supportedLocales(),
           builder: _builder,
