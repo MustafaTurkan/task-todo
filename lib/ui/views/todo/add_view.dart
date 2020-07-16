@@ -63,6 +63,7 @@ class _AddViewState extends State<AddView> {
   @override
   Widget build(BuildContext context) {
     return BaseFormView(
+      height: 5,
       haveAppBar: true,
       title: Center(
         child: Text(
@@ -83,97 +84,91 @@ class _AddViewState extends State<AddView> {
   Widget _buildAddForm() {
     return Form(
         key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: ListView(
           children: <Widget>[
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                SizedBox(
-                  height: 50,
+            SizedBox(
+              height: 50,
+            ),   
+            FormFieldPadding(
+                child: DropDownField<String>(
+                    hintText: _localizer.period,
+                    value: Enum.getLocalizationName(_type),
+                    items: TodoType.values.map((value) {
+                      return DropdownMenuItem(
+                        value: Enum.getLocalizationName(value),
+                        child: Text(Enum.getLocalizationName(value)),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        _type = TodoType.values.firstWhere((e) => Enum.getLocalizationName(e) == val);
+                      });
+                    })),
+            if (_type == TodoType.other)
+              FormFieldPadding(
+                child: DateTimeFormField(
+                  onChange: (date) {
+                    _finishDateTime = date;
+                  },
                 ),
-                FormFieldPadding(
-                    child: DropDownField<String>(
-                        hintText: _localizer.period,
-                        value: Enum.getLocalizationName(_type),
-                        items: TodoType.values.map((value) {
-                          return DropdownMenuItem(
-                            value: Enum.getLocalizationName(value),
-                            child: Text(Enum.getLocalizationName(value)),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          setState(() {
-                            _type = TodoType.values.firstWhere((e) => Enum.getLocalizationName(e) == val);
-                          });
-                        })),
-                if (_type == TodoType.other)
-                  FormFieldPadding(
-                    child: DateTimeFormField(
-                      onChange: (date) {
-                        _finishDateTime = date;
-                      },
-                    ),
-                  ),
-                FormFieldPadding(
-                  child: TextFormField(
-                    focusNode: _fnTitle,
-                    controller: _titleController,
-                    textInputAction: TextInputAction.next,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(50),
-                    ],
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return _localizer.requiredValue;
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(hintText: _localizer.title),
-                    onFieldSubmitted: (val) {
-                      _fnContent.requestFocus();
-                    },
-                  ),
-                ),
-                FormFieldPadding(
-                  child: TextFormField(
-                      focusNode: _fnContent,
-                      controller: _contentController,
-                      textInputAction: TextInputAction.done,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(150),
-                      ],
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return _localizer.requiredValue;
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        hintText: _localizer.content,
-                      ),
-                      onFieldSubmitted: (val) {
-                        _onFormSubmit();
-                      }),
-                ),
-                FormFieldPadding(
-                    child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: FlatButton(
-                      color: _appTheme.data.primaryColor,
-                      onPressed: _onFormSubmit,
-                      child: Text(
-                        _localizer.add,
-                        style: _appTheme.data.textTheme.subtitle1.copyWith(color: _appTheme.colors.fontLight),
-                      ),
-                    ))
+              ),
+            FormFieldPadding(
+              child: TextFormField(
+                focusNode: _fnTitle,
+                controller: _titleController,
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                ],
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return _localizer.requiredValue;
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(hintText: _localizer.title),
+                onFieldSubmitted: (val) {
+                  _fnContent.requestFocus();
+                },
+              ),
+            ),
+            FormFieldPadding(
+              child: TextFormField(
+                  focusNode: _fnContent,
+                  controller: _contentController,
+                  textInputAction: TextInputAction.done,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(150),
                   ],
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return _localizer.requiredValue;
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText: _localizer.content,
+                  ),
+                  onFieldSubmitted: (val) {
+                    _onFormSubmit();
+                  }),
+            ),
+            FormFieldPadding(
+                child: Row(
+              children: <Widget>[
+                Expanded(
+                    child: FlatButton(
+                  color: _appTheme.data.primaryColor,
+                  onPressed: _onFormSubmit,
+                  child: Text(
+                    _localizer.add,
+                    style: _appTheme.data.textTheme.subtitle1.copyWith(color: _appTheme.colors.fontLight),
+                  ),
                 ))
               ],
-            ),
+            ))
           ],
         ));
   }
